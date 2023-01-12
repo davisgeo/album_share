@@ -52,10 +52,20 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-
-                            {% for item in photos %}
-                                <img src="{{ item.photo.url }}" width="100px">
-                            {% endfor %}
+                            <div class="row">
+                                {% for item in photos %}
+                                    <div class="col-md-3 ">
+                                        <div style="border-radius: 5px; border:1px solid #ddd; text-align: center">
+                                            <a href="{% url 'delete_photo' item.id %}" class=""
+                                               style="position: absolute; top:0; right: 14px; color: red; font-weight: bold;padding:5px;">x</a>
+                                            <a href="{% url 'edit_photo' item.id %}" class=""
+                                               style="position: absolute; top:0; right: 50px; color:blue; font-weight: bold;padding:5px;">edit</a>
+                                            <a href="{{ item.photo.url }}" target="_blank"><img
+                                                    src="{{ item.photo.url }}" width="100px" height="100px"/></a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>

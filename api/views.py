@@ -41,8 +41,8 @@ def albumDetail(request, pk):
 @api_view(['GET'])
 def photoList(request, pk):
     album = Album.objects.get(id=pk)
-    photos = Photo.objects.get(album=album)
-    serializer = PhotoSerializer(photos, many=False)
+    photos = Photo.objects.filter(album=album)
+    serializer = PhotoSerializer(photos, many=True)
     return Response(serializer.data)
 
 

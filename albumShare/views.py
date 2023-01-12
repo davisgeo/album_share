@@ -71,13 +71,10 @@ def edit_album(request, pk=None):
     form = AlbumForm(instance=album)
 
     if request.method == 'POST':
-
-        if form.is_valid():
-            # extra steps
-            obj = form.save(commit=False)
-            obj.user = request.user
-            obj.save()
-            form = AlbumForm(instance=obj)
+        album.album_name = request.POST.get('album_name')
+        album.private = True if request.POST.get('private') else False
+        album.save()
+        form = AlbumForm(instance=album)
     context = {
         'page': 'my_albums',
         'album': album,
@@ -87,6 +84,36 @@ def edit_album(request, pk=None):
     }
 
     html_template = loader.get_template('album_share/edit_album.html')
+    return HttpResponse(html_template.render(context, request))
+
+
+@login_required(login_url="/login/")
+def view_album(request, pk=None):
+    album = Album.objects.get(pk=pk)
+    photos = None
+    try:
+        photos = Photo.objects.filter(album=album)
+    except:
+        pass
+    form = AlbumForm(instance=album)
+
+    if request.method == 'POST':
+
+        if form.is_valid():
+            # extra steps
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.save()
+            form = AlbumForm(instance=obj)
+    context = {
+        'page': 'home',
+        'album': album,
+        'photos': photos,
+        'form': form,
+        'edit': True
+    }
+
+    html_template = loader.get_template('album_share/view_album.html')
     return HttpResponse(html_template.render(context, request))
 
 
@@ -115,3 +142,40 @@ def new_photo(request, pk):
 
     html_template = loader.get_template('album_share/add_photo.html')
     return HttpResponse(html_template.render(context, request))
+
+
+@login_required(login_url="/login/")
+def edit_photo(request, pk):
+    photo = Photo.objects.get(pk=pk)
+    album = photo.album
+    form = PhotoForm(instance=photo)
+    if request.method == 'POST':
+        form = PhotoForm(request.POST or None)
+
+        photo.title = request.POST.get('title')
+        photo.album_cover = True if request.POST.get('album_cover') else False
+        photo.private = True if request.POST.get('private') else False
+        photo.save()
+        if photo.album_cover:
+            album.cover_photo_url = photo.photo.url
+            album.save()
+        return HttpResponseRedirect('/edit_album/' + str(album.id) + '/')
+    context = {
+        'page': 'my_albums',
+        'album': album,
+        'form': form
+    }
+
+    html_template = loader.get_template('album_share/add_photo.html')
+    return HttpResponse(html_template.render(context, request))
+
+
+@login_required(login_url="/login/")
+def delete_photo(request, pk):
+    photo = Photo.objects.get(pk=pk)
+    if photo.album.cover_photo_url == photo.photo.url:
+        album = photo.album
+        album.cover_photo_url = ''
+        album.save()
+    photo.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

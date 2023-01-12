@@ -70,8 +70,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'djangoAlbumShare.urls'
 
-LOGIN_REDIRECT_URL = "album_share"  # Route defined in album_share/urls.py
-LOGOUT_REDIRECT_URL = "album_share"  # Route defined in album_share/urls.py
+LOGIN_REDIRECT_URL = "home"  # Route defined in album_share/urls.py
+LOGOUT_REDIRECT_URL = "home"  # Route defined in album_share/urls.py
 TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")  # ROOT dir for templates
 
 TEMPLATES = [

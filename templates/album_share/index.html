@@ -17,23 +17,26 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     {% if item.cover_photo_url %}
-                                        <img src="{{ item.cover_photo_url }}"
-                                             style="width:100%;"/>
+                                        <a href="{{ item.cover_photo_url }}" target="_blank"><img
+                                                src="{{ item.cover_photo_url }}"
+                                                style="width:100%;"/></a>
                                     {% else %}
                                         <img src="https://www.pngkey.com/png/detail/233-2332677_image-500580-placeholder-transparent.png"
                                              style="width:100%;"/>
                                     {% endif %}
                                 </div>
-                                <div class="col-md-8">
+                                <a class="col-md-8">
                                     <h3>{{ item.album_name }}</h3>
                                     <h5>{{ item.user.username }}</h5>
                                     <h5>{{ item.created_date }}</h5>
-                                </div>
+                                    <a class="btn btn-primary" href="{% url 'view_album' item.id %}"
+                                       style="position: absolute; top: 10px; right: 10px"/>View</a>
                             </div>
                         </div>
+                        </div>
                     {% endfor %}
-                </div>
             </div>
         </div>
+    </div>
     </div>
 {% endblock %}
