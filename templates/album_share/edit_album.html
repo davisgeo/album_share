@@ -1,0 +1,65 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} My Albums {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <h2 class="mt-4 pt-4" style="margin-top: 70px">My Album</h2>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Album Name
+
+                                </div>
+                                <div class="col-md-8">
+                                    {{ form.album_name }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Private
+
+                                </div>
+                                <div class="col-md-8">
+                                    {{ form.private }}
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success">Save</button>
+                        <a href="{% url 'my_albums' %}" class="btn btn-danger">Cancel</a>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if edit %}
+        <a class="btn btn-primary" style="float: right" href="{% url 'add_photo' album.id %}"/>New
+        Photo</a>
+        {% if photos %}
+            <h2 class="mt-4 pt-4" style="margin-top: 70px">Album Photos</h2>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+
+                            {% for item in photos %}
+                                <img src="{{ item.photo.url }}" width="100px">
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}

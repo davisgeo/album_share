@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'albumShare.apps.AlbumshareConfig',
+    'api.apps.ApiConfig',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -137,7 +139,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'data/')  # 'data' is my media folder
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')  # 'data' is my media folder
 MEDIA_URL = '/media/'
 
 # Extra places for collectstatic to find static files.

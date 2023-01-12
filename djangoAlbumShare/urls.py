@@ -27,5 +27,6 @@ urlpatterns = [
 
                   # ADD NEW Routes HERE
 
-                  path("", include("albumShare.urls"))
+                  path("", include("albumShare.urls")),
+                  path("api/", include("api.urls"))
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

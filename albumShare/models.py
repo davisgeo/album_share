@@ -10,7 +10,7 @@ class Album(models.Model):
     created_date = models.DateTimeField(blank=True, null=True, auto_now=True)
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
     private = models.BooleanField(default=False)
-    cover_photo_id = models.IntegerField(blank=True, null=True)
+    cover_photo_url = models.CharField(max_length=1000, default='', null=True, blank=True)
 
 
 class Photo(models.Model):

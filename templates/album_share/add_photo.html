@@ -1,0 +1,65 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} My Albums {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <h2 class="mt-4 pt-4" style="margin-top: 70px">Add Photo to {{ album.album_name }}</h2>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Title
+
+                                </div>
+                                <div class="col-md-8">
+                                    {{ form.title }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Photo
+
+                                </div>
+                                <div class="col-md-8">
+                                    {{ form.photo }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Private
+
+                                </div>
+                                <div class="col-md-8">
+                                    {{ form.private }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Album Cover
+
+                                </div>
+                                <div class="col-md-8">
+                                    {{ form.album_cover }}
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success">Save</button>
+                        <a href="{% url 'edit_album' album.id %}" class="btn btn-danger">Cancel</a>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
