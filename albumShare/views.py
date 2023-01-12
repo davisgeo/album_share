@@ -12,7 +12,7 @@ from albumShare.models import Album
 
 @login_required(login_url="/login/")
 def index(request):
-    all_public_albums = Album.objects.filter(private=False)
+    all_public_albums = Album.objects.filter(private=False).order_by('-id')
     context = {
         'page': 'home',
         'all_public_albums': all_public_albums
@@ -25,6 +25,8 @@ def index(request):
 @login_required(login_url="/login/")
 def my_albums(request):
     all_my_albums = Album.objects.filter(user_id=request.user.id)
+    for item in all_my_albums:
+        print(item.cover_photo_url)
     context = {
         'page': 'my_albums',
         'all_my_albums': all_my_albums
@@ -64,8 +66,6 @@ def edit_album(request, pk=None):
     photos = None
     try:
         photos = Photo.objects.filter(album=album)
-        for item in photos:
-            print(item.photo.url)
     except:
         pass
     form = AlbumForm(instance=album)
