@@ -12,9 +12,20 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+import os, environ
 
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, True)
+)
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# BASE_DIR = Path(__file__).resolve().parent.parent
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+CORE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Take environment variables from .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -25,8 +36,12 @@ SECRET_KEY = 'django-insecure-y-its_&^vwogcyjcex4l^i!o6!m4te$1)3@mu6_y#9)ofg_)oo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# load production server from .env
+ALLOWED_HOSTS = ['localhost', 'localhost:85', '127.0.0.1', env('SERVER', default='127.0.0.1')]
+CSRF_TRUSTED_ORIGINS = ['http://localhost:85', 'http://127.0.0.1', 'https://' + env('SERVER', default='127.0.0.1')]
 
+# Assets Management
+ASSETS_ROOT = os.getenv('ASSETS_ROOT', '/static/assets')
 
 # Application definition
 
@@ -42,6 +57,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -52,10 +68,14 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'djangoAlbumShare.urls'
 
+LOGIN_REDIRECT_URL = "home"  # Route defined in home/urls.py
+LOGOUT_REDIRECT_URL = "home"  # Route defined in home/urls.py
+TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")  # ROOT dir for templates
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
+        'DIRS': [TEMPLATE_DIR]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -71,17 +91,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'djangoAlbumShare.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -101,7 +119,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -113,11 +130,17 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(CORE_DIR, 'static'),
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
